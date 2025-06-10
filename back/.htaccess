@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /
+RewriteRule ^notes$ index.php?loc=notes [L,QSA]
+RewriteRule ^tags$ index.php?loc=tags [L,QSA]
