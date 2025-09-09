@@ -1,4 +1,4 @@
-import router from "@/router";
+// import router from "@/router";²
 import axios from "axios";
 
 const url = import.meta.env.VITE_API_URL;
@@ -10,8 +10,15 @@ export async function getUsers() {
 };
 
 export async function getUser(id) {
-
+  const response = await axios.get(`${url}/users/${id}`);
+  const user = response.data;
+  return user;
 };
+
+export async function displayUser(user) {
+  let id = user.id_user;
+  router.push(`/users/${id}`);
+}
 
 export async function createUser(form) {
 
