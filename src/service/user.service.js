@@ -21,7 +21,12 @@ export async function displayUser(user) {
 }
 
 export async function createUser(form) {
-
+  const response = await axios.post(`${url}/users`, {
+    first_name: form.value.first_name,
+    last_name: form.value.last_name,
+    password: form.value.password,
+  });
+  return response.data;
 };
 
 export async function updateUser(id, form) {

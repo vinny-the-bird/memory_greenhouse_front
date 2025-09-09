@@ -12,9 +12,9 @@
                 <label class="label">Prénom</label>
                 <div class="control">
                   <input
-                    class="input is-lowercase"
+                    class="input is-capitalized"
                     type="text"
-                    v-model="form.first_name"
+                    v-model="inputFirstName"
                     placeholder="Prénom"
                     @keydown="blockInvalidInput"
                     @paste="handlePaste"
@@ -28,9 +28,9 @@
             <label class="label">Nom</label>
             <div class="control">
               <input
-                class="input is-lowercase"
+                class="input is-capitalized"
                 type="text"
-                v-model="form.last_name"
+                v-model="inputLastName"
                 placeholder="Nom"
                 @keydown="blockInvalidInput"
                 @paste="handlePaste"
@@ -43,26 +43,23 @@
             <div class="column is-half">
             <div class="field">
             <label class="label">Prévision du nom d'utilisateur</label>
-            <p v-if="!form.first_name && !form.last_name"></p>
-            <p class="is-lowercase has-text-weight-bold has-text-centered" v-else>"{{  form.first_name }}_{{ form.last_name }}"</p>
+            <p v-if="!inputFirstName && !inputLastName"></p>
+            <p class="has-text-weight-bold is-lowercase has-text-centered" v-else>"{{  username }}"</p>
           </div>
 
 
-                <div class="field">
-                    <label class="label">Mot de passe</label>
-                    <div class="control">
-                <input
-                  class="input"
-                  type="password"
-                  v-model="form.password"
-                  placeholder="Mot de passe"
-                    @keydown="blockInvalidInput"
-                    @paste="handlePaste"
-                    required
-                  ></input>
-                </div>
+            <div class="field">
+                <label class="label">Mot de passe</label>
+                <div class="control">
+            <input
+                class="input"
+                type="password"
+                v-model="form.password"
+                placeholder="Mot de passe"
+                required
+                ></input>
             </div>
-            
+        </div>
         </div>
     </div>
 
@@ -93,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import router from "@/router";
 // import * as channelService from "@/service/channel.service";
@@ -102,16 +99,25 @@ import * as userService from "@/service/user.service";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-// const products = ref([]);
-// const environments = ref([]);
+const inputFirstName = ref("");
+const inputLastName = ref("");
 
-// const tempFirstName = ref("");
-// const tempLastName = ref("");
-// let estimatedUsername = ref(`${form.first_name}`);
+const username = computed(() => {
+  const first = inputFirstName.value.replace(/\s+/g, "").toLowerCase();
+  const last = inputLastName.value.replace(/\s+/g, "").toLowerCase();
+  if (!first && !last) return "";
+  return `${first}_${last}`;
+});
+
+// const form = ref({
+//   first_name: "",
+//   last_name: "",
+//   password: "",
+// });
 
 const form = ref({
-  first_name: "",
-  last_name: "",
+  first_name: inputFirstName,
+  last_name: inputLastName,
   password: "",
 });
 
@@ -139,6 +145,7 @@ async function createUser() {
     });
 }
 
+// TODO: forbid special chars BUT allow all types of accents
 function blockInvalidInput(e) {
   const allowedKeys = [
     "Backspace",
@@ -149,7 +156,7 @@ function blockInvalidInput(e) {
     "ArrowDown",
     "Delete",
   ];
-  const isLowerAlpha = /^[a-z]$/.test(e.key);
+  const isLowerAlpha = /^[a-z ]$/i.test(e.key);
 
   if (!isLowerAlpha && !allowedKeys.includes(e.key)) {
     e.preventDefault();
@@ -158,7 +165,8 @@ function blockInvalidInput(e) {
 
 function handlePaste(e) {
   const text = e.clipboardData.getData("text");
-  if (!/^[a-z]$/.test(text)) {
+  if (!/^[a-z ]+$/i
+.test(text)) {
     e.preventDefault();
   }
 }
