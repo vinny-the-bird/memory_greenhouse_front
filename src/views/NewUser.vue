@@ -9,7 +9,7 @@
             <div class="column is-half">
 
               <div class="field">
-                <label class="label">Prénom</label>
+                <label class="label">Prénom(s)</label>
                 <div class="control">
                   <input
                     class="input is-capitalized"
@@ -25,7 +25,7 @@
 
 
             <div class="field">
-            <label class="label">Nom</label>
+            <label class="label">Nom(s)</label>
             <div class="control">
               <input
                 class="input is-capitalized"
@@ -93,33 +93,38 @@
 import { ref, computed } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import router from "@/router";
-// import * as channelService from "@/service/channel.service";
 import * as userService from "@/service/user.service";
-// import { getProductsAndEnvironments } from "@/service/products-and-environment.service";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 const inputFirstName = ref("");
 const inputLastName = ref("");
 
+
 const username = computed(() => {
-  const first = inputFirstName.value.replace(/\s+/g, "").toLowerCase();
-  const last = inputLastName.value.replace(/\s+/g, "").toLowerCase();
+  const first = streamlineName(inputFirstName.value);
+  const last = streamlineName(inputLastName.value);
+
   if (!first && !last) return "";
   return `${first}_${last}`;
 });
 
-// const form = ref({
-//   first_name: "",
-//   last_name: "",
-//   password: "",
-// });
+function streamlineName(string) {
+  return string
+    .normalize("NFD")                     // Decompose accented letters
+    .replace(/[\u0300-\u036f]/g, "")      // Remove diacritics
+    .replace(/[\s'-]/g, "")               // Remove spaces, apostrophes, hyphens
+    .toLowerCase();                       // Convert to lowercase
+}
 
 const form = ref({
   first_name: inputFirstName,
   last_name: inputLastName,
   password: "",
 });
+
+const message ="error message";
+
 
 async function createUser() {
   await userService
@@ -145,7 +150,6 @@ async function createUser() {
     });
 }
 
-// TODO: forbid special chars BUT allow all types of accents
 function blockInvalidInput(e) {
   const allowedKeys = [
     "Backspace",
@@ -156,7 +160,7 @@ function blockInvalidInput(e) {
     "ArrowDown",
     "Delete",
   ];
-  const isLowerAlpha = /^[a-z ]$/i.test(e.key);
+  const isLowerAlpha = /^[\p{L}' -]+$/u.test(e.key);
 
   if (!isLowerAlpha && !allowedKeys.includes(e.key)) {
     e.preventDefault();
@@ -165,17 +169,14 @@ function blockInvalidInput(e) {
 
 function handlePaste(e) {
   const text = e.clipboardData.getData("text");
-  if (!/^[a-z ]+$/i
+  if (!/^[\p{L}' -]+$/u
 .test(text)) {
     e.preventDefault();
+    alert("Seuls les lettres, avec ou sans accent, les tirets, les apostrophes et les espaces sont autorisés.");
   }
 }
 
-// onMounted(async () => {
-//   let info = await getProductsAndEnvironments();
-//   products.value = info.products;
-//   environments.value = info.environments;
-// });
+
 </script>
 
 <style scoped>

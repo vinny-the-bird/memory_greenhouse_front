@@ -58,6 +58,8 @@
       </table>
     </div>
   </div>
+  <br />
+  <!-- <br /><br /><br /> -->
 </template>
 
 <script setup>
@@ -81,8 +83,7 @@ const filteredUsers = computed(() => {
   const input = searchInput.value?.trim().toLowerCase() || "";
 
   return users.value.filter((users) => {
-    const matchesInput =
-      users.username.toLowerCase().includes(input)
+    const matchesInput = users.username.toLowerCase().includes(input);
 
     return matchesInput;
   });
@@ -125,5 +126,9 @@ onMounted(async () => {
 <style scoped>
 .clickable-row {
   cursor: pointer;
+}
+
+.px-2 {
+  margin-bottom: 3rem;
 }
 </style>
