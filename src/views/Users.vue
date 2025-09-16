@@ -43,9 +43,9 @@
         <tbody>
           <tr
             v-for="user in filteredUsers"
-            :key="user.id"
+            :key="user.id_user"
             class="clickable-row"
-            @click="userService.displayUser(user)"
+            @click="userService.openUser(user)"
           >
             <td>
               {{ user.first_name }}

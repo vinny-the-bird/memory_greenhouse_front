@@ -1,11 +1,15 @@
 <template>
   <Navbar />
   <div class="container px-2">
+    <!-- <div v-if="loading == true">
+      <WaitSpinner />
+    </div> -->
     <div class="container mt-5">
       <div class="box">
-        <h1 class="title is-4">Créer un utilisateur</h1>
+        <h1 class="title is-4">Éditer un utilisateur</h1>
         <form @submit.prevent>
           <div class="columns is-vcentered">
+      
             <div class="column is-half">
 
               <div class="field">
@@ -14,7 +18,7 @@
                   <input
                     class="input is-capitalized"
                     type="text"
-                    v-model="inputFirstName"
+                    v-model="form.first_name"
                     placeholder="Prénom"
                     @keydown="blockInvalidInput"
                     @paste="handlePaste"
@@ -30,7 +34,7 @@
               <input
                 class="input is-capitalized"
                 type="text"
-                v-model="inputLastName"
+                v-model="form.last_name"
                 placeholder="Nom"
                 @keydown="blockInvalidInput"
                 @paste="handlePaste"
@@ -41,12 +45,13 @@
             </div>
         
             <div class="column is-half">
-              <!-- <div class="field">
-              <label class="label">Prévision du nom d'utilisateur</label>
-              <p v-if="!inputFirstName && !inputLastName"></p>
-              <p class="has-text-weight-bold is-lowercase has-text-centered" v-else>"{{  username }}"</p>
+            <!-- <div class="field">
+            <label class="label">Prévision du nom d'utilisateur</label>
+            <p v-if="!inputFirstName && !inputLastName"></p>
+            <p class="has-text-weight-bold is-lowercase has-text-centered" v-else>"{{  username }}"</p>
           </div> -->
-                  <div class="field">
+
+            <div class="field">
             <label class="label">Prévision nom d'utilisateur auto-généré</label>
             <div class="control">
               <input
@@ -60,7 +65,6 @@
               ></input>
             </div>
           </div>
-
 
             <div class="field">
                 <label class="label">Mot de passe</label>
@@ -76,17 +80,29 @@
         </div>
         </div>
     </div>
+            <!-- </div> -->
 
 
           <div class="level">
-            <div class="level-left"></div>
+            <div class="level-left">
+              <div class="control level-item">
+                <ConfirmationModal
+                  :title="modalTitle"
+                  :modalButtonName="modalButtonName"
+                  :primaryButtonName="modalConfirmButtonName"
+                  :secondaryButtonName="modalCancelButtonName"
+                  @click="deleteUser"
+                />
+              </div>
+            </div>
+
             <div class="level-right">
               <div class="control level-item">
                 <button
                   class="button is-primary"
                   type="submit"
                   :disabled="!form.first_name || !form.last_name || !form.password"
-                  @click="createUser"
+                  @click="updateUser"
                 >
                   Enregistrer
                 </button>
@@ -104,20 +120,36 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import router from "@/router";
-import * as userService from "@/service/user.service";
+import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
+import { toastApiError } from "@/service/toast.service";
 import "vue3-toastify/dist/index.css";
+import ConfirmationModal from "@/components/ConfirmationModal.vue";
+// import WaitSpinner from "@/components/WaitSpinner.vue";
+import * as userService from "@/service/user.service";
+
+
+const route = useRoute();
+const id = route.params.id;
+
+const user = ref([]);
 
 const inputFirstName = ref("");
 const inputLastName = ref("");
+const loading = ref(false);
 
+const modalTitle = "Confirmer la suppression ?";
+const modalButtonName = "Supprimer";
+const modalConfirmButtonName = "Oui";
+const modalCancelButtonName = "Retour";
+const message ="error message";
 
 const builtUsername = computed(() => {
-  const first = streamlineName(inputFirstName.value);
-  const last = streamlineName(inputLastName.value);
+  const first = streamlineName(form.value.first_name);
+  const last = streamlineName(form.value.last_name);
 
   if (!first && !last) return "";
   return `${first}_${last}`;
@@ -130,26 +162,23 @@ function streamlineName(string) {
     .replace(/[\s'-]/g, "")               // Remove spaces, apostrophes, hyphens
     .toLowerCase();                       // Convert to lowercase
 }
-
 const form = ref({
   first_name: inputFirstName,
   last_name: inputLastName,
-  username: builtUsername,
   password: "",
 });
 
-const message ="error message";
-
-
-async function createUser() {
+async function updateUser() {
   await userService
-    .createUser(form)
-
+    .updateUser(id, {
+        ...form.value,
+        username: builtUsername.value,
+    })
     .then((response) => {
       router.push("/users");
 
       setTimeout(() => {
-        toast("Utilisateur créé avec succès !", {
+        toast("Utilisateur édité avec succès !", {
           theme: "colored",
           type: "success",
           position: "bottom-center",
@@ -164,6 +193,56 @@ async function createUser() {
       });
     });
 }
+
+async function deleteUser() {
+  await userService
+    .deleteUser(id)
+    .then((response) => {
+      router.push("/users");
+
+      setTimeout(() => {
+        toast("Utilisateur supprimé avec succès !", {
+          theme: "colored",
+          type: "success",
+          position: "bottom-center",
+        });
+      }, 100);
+    })
+    .catch((err) => {
+      toast(message, {
+        theme: "colored",
+        type: "error",
+        position: "bottom-center",
+      });
+    });
+}
+
+onMounted(async () => {
+  loading.value = true;
+  let error = null;
+
+  Promise.allSettled([
+    userService.getUser(id),
+  ])
+    .then((results) => {
+      if (results[0].status === "fulfilled") {
+        user.value = results[0].value;
+      } else {
+        error = results[0].reason;
+        toastApiError(error);
+      }
+
+    //   loading.value = false;
+    })
+    .then(() => {
+      form.value = {
+        first_name: user.value.first_name,
+        last_name: user.value.last_name,
+        password: user.value.password,
+      };
+      // loading.value = false;
+    });
+});
 
 function blockInvalidInput(e) {
   const allowedKeys = [
@@ -191,22 +270,4 @@ function handlePaste(e) {
   }
 }
 
-
 </script>
-
-<style scoped>
-
-/* .low {
-    text-transform: lowercase;
-} */
-
-/* .center {
-  text-align: center;
-} */
-
-.field {
-    /* background-color: aqua; */
-    height: 5rem;
-}
-
-</style>
