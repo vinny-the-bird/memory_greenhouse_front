@@ -18,7 +18,7 @@
                   <input
                     class="input is-capitalized"
                     type="text"
-                    v-model="inputFirstName"
+                    v-model="form.first_name"
                     placeholder="Prénom"
                     @keydown="blockInvalidInput"
                     @paste="handlePaste"
@@ -34,7 +34,7 @@
               <input
                 class="input is-capitalized"
                 type="text"
-                v-model="inputLastName"
+                v-model="form.last_name"
                 placeholder="Nom"
                 @keydown="blockInvalidInput"
                 @paste="handlePaste"
@@ -45,12 +45,26 @@
             </div>
         
             <div class="column is-half">
-            <div class="field">
+            <!-- <div class="field">
             <label class="label">Prévision du nom d'utilisateur</label>
             <p v-if="!inputFirstName && !inputLastName"></p>
             <p class="has-text-weight-bold is-lowercase has-text-centered" v-else>"{{  username }}"</p>
-          </div>
+          </div> -->
 
+            <div class="field">
+            <label class="label">Prévision nom d'utilisateur auto-généré</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                v-model="builtUsername"
+                placeholder="Nom d'utilisateur"
+                @keydown="blockInvalidInput"
+                @paste="handlePaste"
+                readonly
+              ></input>
+            </div>
+          </div>
 
             <div class="field">
                 <label class="label">Mot de passe</label>
@@ -68,8 +82,6 @@
     </div>
             <!-- </div> -->
 
-
-      
 
           <div class="level">
             <div class="level-left">
@@ -89,7 +101,7 @@
                 <button
                   class="button is-primary"
                   type="submit"
-                  :disabled="!form.name || !form.client || !form.environment"
+                  :disabled="!form.first_name || !form.last_name || !form.password"
                   @click="updateUser"
                 >
                   Enregistrer
@@ -111,9 +123,6 @@
 import { ref, onMounted, computed } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import router from "@/router";
-// import { getProductsAndEnvironments } from "@/service/products-and-environment.service";
-// import * as receiverService from "@/service/receiver.service";
-// import * as clientService from "@/service/client.service";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import { toastApiError } from "@/service/toast.service";
@@ -125,9 +134,7 @@ import * as userService from "@/service/user.service";
 
 const route = useRoute();
 const id = route.params.id;
-// const clients = ref([]);
-// const environments = ref([]);
-// const receiver = ref([]);
+
 const user = ref([]);
 
 const inputFirstName = ref("");
@@ -138,7 +145,23 @@ const modalTitle = "Confirmer la suppression ?";
 const modalButtonName = "Supprimer";
 const modalConfirmButtonName = "Oui";
 const modalCancelButtonName = "Retour";
+const message ="error message";
 
+const builtUsername = computed(() => {
+  const first = streamlineName(form.value.first_name);
+  const last = streamlineName(form.value.last_name);
+
+  if (!first && !last) return "";
+  return `${first}_${last}`;
+});
+
+function streamlineName(string) {
+  return string
+    .normalize("NFD")                     // Decompose accented letters
+    .replace(/[\u0300-\u036f]/g, "")      // Remove diacritics
+    .replace(/[\s'-]/g, "")               // Remove spaces, apostrophes, hyphens
+    .toLowerCase();                       // Convert to lowercase
+}
 const form = ref({
   first_name: inputFirstName,
   last_name: inputLastName,
@@ -147,8 +170,10 @@ const form = ref({
 
 async function updateUser() {
   await userService
-    .updateUser(id, form)
-
+    .updateUser(id, {
+        ...form.value,
+        username: builtUsername.value,
+    })
     .then((response) => {
       router.push("/users");
 
@@ -198,8 +223,6 @@ onMounted(async () => {
 
   Promise.allSettled([
     userService.getUser(id),
-    // getProductsAndEnvironments(),
-    // clientService.getClients(),
   ])
     .then((results) => {
       if (results[0].status === "fulfilled") {
@@ -213,8 +236,8 @@ onMounted(async () => {
     })
     .then(() => {
       form.value = {
-        first_name: user.value.firstName,
-        last_name: user.value.lastName,
+        first_name: user.value.first_name,
+        last_name: user.value.last_name,
         password: user.value.password,
       };
       // loading.value = false;
