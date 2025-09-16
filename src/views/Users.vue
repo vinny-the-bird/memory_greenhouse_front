@@ -25,7 +25,9 @@
 
         <div class="level-right">
           <p class="level-item">
-            <a class="button is-success" @click="createUser">Créer</a>
+            <a class="button is-success" @click="createUser">
+              <font-awesome-icon icon="fa-solid fa-plus" size="1x" />
+            </a>
           </p>
         </div>
       </nav>
@@ -59,25 +61,18 @@
     </div>
   </div>
   <br />
-  <!-- <br /><br /><br /> -->
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import Navbar from "@/components/Navbar.vue";
-// import * as userService from "@/service/user.service";
 import * as userService from "@/service/user.service";
 import { toastApiError } from "@/service/toast.service";
-
-// import { toastApiError } from "@/service/toast"
 import router from "@/router";
-// import { getProductsAndEnvironments } from "@/service/products-and-environment.service";
 // import WaitSpinner from "@/components/WaitSpinner.vue";
 
 const searchInput = ref("");
 const users = ref([]);
-// const products = ref([]);
-// const selectedProduct = ref("");
 
 const filteredUsers = computed(() => {
   const input = searchInput.value?.trim().toLowerCase() || "";
@@ -101,7 +96,6 @@ onMounted(async () => {
 
   Promise.allSettled([
     userService.getUsers(),
-    // getProductsAndEnvironments(),
   ]).then((results) => {
     if (results[0].status === "fulfilled") {
       users.value = results[0].value;
@@ -109,14 +103,6 @@ onMounted(async () => {
       error = results[0].reason;
       toastApiError(error);
     }
-
-    // if (results[1].status === "fulfilled") {
-    //   products.value = results[1].value.products;
-    //   // environments.value = results[1].value.environments;
-    // } else {
-    //   error = results[1].reason;
-    //   toastApiError(error);
-    // }
 
     // loading.value = false;
   });

@@ -28,8 +28,6 @@
             >Documentation</router-link
           >
           <router-link class="navbar-item" to="/test">TEST LAB</router-link>
-
-
         </div>
 
         <div class="navbar-end">
@@ -40,7 +38,9 @@
               class="has-text-info is-size-4"
               style="cursor: help"
             >
-              <IconInformation />
+              <span class="icon">
+                <font-awesome-icon icon="fa-solid fa-circle-info" />
+              </span>
             </span>
           </div>
           <div class="navbar-item">
@@ -50,7 +50,9 @@
                 @click="onLogout()"
               >
                 <span class="icon">
-                  <IconLogout class="is-size-5" />
+                  <font-awesome-icon
+                    icon="fa-solid fa-right-from-bracket"
+                  />
                 </span>
                 <span>Déconnexion</span>
               </button>
@@ -63,7 +65,15 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const apiInfo = ref(
+  `API :      ${import.meta.env.VITE_API_URL}\nLogin :   ${
+    import.meta.env.VITE_LOGIN_URL
+  }`
+);
+</script>
 
 <style scoped>
 /* img.image {
