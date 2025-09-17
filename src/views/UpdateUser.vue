@@ -45,19 +45,13 @@
             </div>
         
             <div class="column is-half">
-            <!-- <div class="field">
-            <label class="label">Prévision du nom d'utilisateur</label>
-            <p v-if="!inputFirstName && !inputLastName"></p>
-            <p class="has-text-weight-bold is-lowercase has-text-centered" v-else>"{{  username }}"</p>
-          </div> -->
-
             <div class="field">
             <label class="label">Prévision nom d'utilisateur auto-généré</label>
             <div class="control">
               <input
                 class="input"
                 type="text"
-                v-model="builtUsername"
+                v-model="username"
                 placeholder="Nom d'utilisateur"
                 @keydown="blockInvalidInput"
                 @paste="handlePaste"
@@ -74,13 +68,12 @@
                 type="password"
                 v-model="form.password"
                 placeholder="Mot de passe"
-                required
+                disabled
                 ></input>
             </div>
         </div>
         </div>
     </div>
-            <!-- </div> -->
 
 
           <div class="level">
@@ -120,129 +113,111 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted, computed } from "vue";
-import Navbar from "@/components/Navbar.vue";
-import router from "@/router";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import { toastApiError } from "@/service/toast.service";
-import "vue3-toastify/dist/index.css";
-import ConfirmationModal from "@/components/ConfirmationModal.vue";
-// import WaitSpinner from "@/components/WaitSpinner.vue";
 import * as userService from "@/service/user.service";
-
+import Navbar from "@/components/Navbar.vue";
+import ConfirmationModal from "@/components/ConfirmationModal.vue";
 
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id;
 
-const user = ref([]);
-
-const inputFirstName = ref("");
-const inputLastName = ref("");
+const user = ref(null);
 const loading = ref(false);
+const message = "Erreur lors de la mise à jour";
 
 const modalTitle = "Confirmer la suppression ?";
 const modalButtonName = "Supprimer";
 const modalConfirmButtonName = "Oui";
 const modalCancelButtonName = "Retour";
-const message ="error message";
 
-const builtUsername = computed(() => {
+const form = ref({
+  first_name: "",
+  last_name: "",
+  password: "",
+});
+
+const username = computed(() => {
   const first = streamlineName(form.value.first_name);
   const last = streamlineName(form.value.last_name);
-
   if (!first && !last) return "";
   return `${first}_${last}`;
 });
 
 function streamlineName(string) {
   return string
-    .normalize("NFD")                     // Decompose accented letters
-    .replace(/[\u0300-\u036f]/g, "")      // Remove diacritics
-    .replace(/[\s'-]/g, "")               // Remove spaces, apostrophes, hyphens
-    .toLowerCase();                       // Convert to lowercase
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\s'-]/g, "")
+    .toLowerCase();
 }
-const form = ref({
-  first_name: inputFirstName,
-  last_name: inputLastName,
-  password: "",
-});
 
 async function updateUser() {
-  await userService
-    .updateUser(id, {
-        ...form.value,
-        username: builtUsername.value,
-    })
-    .then((response) => {
-      router.push("/users");
+  try {
+    await userService.updateUser(id, {
+      ...form.value,
+      username: username.value,
+    });
 
-      setTimeout(() => {
-        toast("Utilisateur édité avec succès !", {
-          theme: "colored",
-          type: "success",
-          position: "bottom-center",
-        });
-      }, 100);
-    })
-    .catch((err) => {
-      toast(message, {
+    router.push("/users");
+
+    setTimeout(() => {
+      toast("Utilisateur édité avec succès !", {
         theme: "colored",
-        type: "error",
+        type: "success",
         position: "bottom-center",
       });
+    }, 100);
+  } catch (err) {
+    toast(message, {
+      theme: "colored",
+      type: "error",
+      position: "bottom-center",
     });
+  }
 }
 
 async function deleteUser() {
-  await userService
-    .deleteUser(id)
-    .then((response) => {
-      router.push("/users");
+  try {
+    await userService.deleteUser(id);
+    router.push("/users");
 
-      setTimeout(() => {
-        toast("Utilisateur supprimé avec succès !", {
-          theme: "colored",
-          type: "success",
-          position: "bottom-center",
-        });
-      }, 100);
-    })
-    .catch((err) => {
-      toast(message, {
+    setTimeout(() => {
+      toast("Utilisateur supprimé avec succès !", {
         theme: "colored",
-        type: "error",
+        type: "success",
         position: "bottom-center",
       });
+    }, 100);
+  } catch (err) {
+    toast(message, {
+      theme: "colored",
+      type: "error",
+      position: "bottom-center",
     });
+  }
 }
 
 onMounted(async () => {
   loading.value = true;
-  let error = null;
 
-  Promise.allSettled([
-    userService.getUser(id),
-  ])
-    .then((results) => {
-      if (results[0].status === "fulfilled") {
-        user.value = results[0].value;
-      } else {
-        error = results[0].reason;
-        toastApiError(error);
-      }
+  try {
+    user.value = await userService.getUser(id);
 
-    //   loading.value = false;
-    })
-    .then(() => {
-      form.value = {
-        first_name: user.value.first_name,
-        last_name: user.value.last_name,
-        password: user.value.password,
-      };
-      // loading.value = false;
-    });
+    form.value.first_name = user.value.first_name;
+    form.value.last_name = user.value.last_name;
+    form.value.password = user.value.password; 
+  } catch (err) {
+    toastApiError(err);
+  } finally {
+    loading.value = false;
+  }
 });
+
 
 function blockInvalidInput(e) {
   const allowedKeys = [
