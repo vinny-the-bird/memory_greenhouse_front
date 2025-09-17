@@ -5,14 +5,12 @@ const url = import.meta.env.VITE_API_URL;
 
 export async function getUsers() {
   let info;
-  const response = await axios.get(`${url}/users`); // error test
+  const response = await axios.get(`${url}/users`);
   return (info = response.data);
 }
 
 export async function getUser(id) {
   const response = await axios.get(`${url}/users/${id}`);
-
-  // return response.data[0];
   return response.data;
 }
 
@@ -23,10 +21,10 @@ export async function openUser(user) {
 
 export async function createUser(form) {
   const response = await axios.post(`${url}/users`, {
-    first_name: form.value.first_name,
-    last_name: form.value.last_name,
-    username: form.value.username,
-    password: form.value.password,
+    first_name: form.first_name,
+    last_name: form.last_name,
+    username: form.username,
+    password: form.password,
   });
   return response.data;
 }

@@ -14,7 +14,7 @@
                   <input
                     class="input is-capitalized"
                     type="text"
-                    v-model="inputFirstName"
+                    v-model="form.first_name"
                     placeholder="Prénom"
                     @keydown="blockInvalidInput"
                     @paste="handlePaste"
@@ -30,7 +30,7 @@
               <input
                 class="input is-capitalized"
                 type="text"
-                v-model="inputLastName"
+                v-model="form.last_name"
                 placeholder="Nom"
                 @keydown="blockInvalidInput"
                 @paste="handlePaste"
@@ -47,7 +47,7 @@
               <input
                 class="input"
                 type="text"
-                v-model="builtUsername"
+                v-model="username"
                 placeholder="Nom d'utilisateur"
                 @keydown="blockInvalidInput"
                 @paste="handlePaste"
@@ -106,13 +106,15 @@ import * as userService from "@/service/user.service";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-const inputFirstName = ref("");
-const inputLastName = ref("");
+const form = ref({
+  first_name: "",
+  last_name: "",
+  password: "",
+});
 
-
-const builtUsername = computed(() => {
-  const first = streamlineName(inputFirstName.value);
-  const last = streamlineName(inputLastName.value);
+const username = computed(() => {
+  const first = streamlineName(form.value.first_name);
+  const last = streamlineName(form.value.last_name);
 
   if (!first && !last) return "";
   return `${first}_${last}`;
@@ -121,43 +123,37 @@ const builtUsername = computed(() => {
 function streamlineName(string) {
   return string
     .normalize("NFD")                     // Decompose accented letters
-    .replace(/[\u0300-\u036f]/g, "")      // Remove diacritics
+    .replace(/[\u0300-\u036f]/g, "")      // Remove diacritics (accent, cedilla)
     .replace(/[\s'-]/g, "")               // Remove spaces, apostrophes, hyphens
-    .toLowerCase();                       // Convert to lowercase
+    .toLowerCase();                       // To lowercase
 }
 
-const form = ref({
-  first_name: inputFirstName,
-  last_name: inputLastName,
-  username: builtUsername,
-  password: "",
-});
-
-const message ="error message";
+// const message ="error message";
 
 
 async function createUser() {
-  await userService
-    .createUser(form)
+  try {
+    await userService.createUser({
+      ...form.value,
+      username: username.value,
+    });
 
-    .then((response) => {
-      router.push("/users");
+    router.push("/users");
 
-      setTimeout(() => {
-        toast("Utilisateur créé avec succès !", {
-          theme: "colored",
-          type: "success",
-          position: "bottom-center",
-        });
-      }, 100);
-    })
-    .catch((err) => {
-      toast(message, {
+    setTimeout(() => {
+      toast("Utilisateur créé avec succès !", {
         theme: "colored",
-        type: "error",
+        type: "success",
         position: "bottom-center",
       });
+    }, 100);
+  } catch (err) {
+    toast("Erreur lors de la création", {
+      theme: "colored",
+      type: "error",
+      position: "bottom-center",
     });
+  }
 }
 
 function blockInvalidInput(e) {
@@ -190,14 +186,6 @@ function handlePaste(e) {
 </script>
 
 <style scoped>
-
-/* .low {
-    text-transform: lowercase;
-} */
-
-/* .center {
-  text-align: center;
-} */
 
 .field {
     /* background-color: aqua; */
