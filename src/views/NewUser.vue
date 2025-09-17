@@ -41,11 +41,6 @@
             </div>
         
             <div class="column is-half">
-              <!-- <div class="field">
-              <label class="label">Prévision du nom d'utilisateur</label>
-              <p v-if="!inputFirstName && !inputLastName"></p>
-              <p class="has-text-weight-bold is-lowercase has-text-centered" v-else>"{{  username }}"</p>
-          </div> -->
                   <div class="field">
             <label class="label">Prévision nom d'utilisateur auto-généré</label>
             <div class="control">
