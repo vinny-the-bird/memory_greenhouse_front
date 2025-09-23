@@ -23,6 +23,7 @@
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
           <router-link class="navbar-item" to="/">Home</router-link>
+          <router-link class="navbar-item" to="/notes">Notes</router-link>
           <router-link class="navbar-item" to="/users">Users</router-link>
           <router-link class="navbar-item" to="/documentation"
             >Documentation</router-link
@@ -32,7 +33,7 @@
 
         <div class="navbar-end">
           <!-- Affiche les URL de l'API, utile pour le debug -->
-          <div class="navbar-item">
+          <!-- <div class="navbar-item">
             <span
               :title="apiInfo"
               class="has-text-info is-size-4"
@@ -42,7 +43,8 @@
                 <font-awesome-icon icon="fa-solid fa-circle-info" />
               </span>
             </span>
-          </div>
+          </div> -->
+
           <div class="navbar-item">
             <div class="buttons">
               <button
