@@ -5,7 +5,7 @@
       <WaitSpinner />
     </div> -->
     <div class="users">
-      <h2 class="title is-4">Page des Users</h2>
+      <h2 class="title is-4">Utilisateurs</h2>
 
       <nav class="level">
         <div class="level-left">

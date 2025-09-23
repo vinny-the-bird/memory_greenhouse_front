@@ -4,8 +4,8 @@
     <!-- <div v-if="loading == true">
       <WaitSpinner />
     </div> -->
-    <div class="users">
-      <h2 class="title is-4">temp - notes</h2>
+    <div class="notes">
+      <h2 class="title is-4">Notes</h2>
 
       <nav class="level">
         <div class="level-left">
@@ -35,26 +35,26 @@
       <table class="table is-hoverable has-text-left is-fullwidth">
         <thead>
           <tr class="">
-            <th>Prénom</th>
-            <th>Nom</th>
-            <th>Nom d'utilisateur</th>
-            <th>N° tag</th>
+            <th>Titre</th>
+            <th>Contenu</th>
+            <th>Auteur</th>
+            <th>Date</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="user in filteredUsers"
-            :key="user.id_user"
+            v-for="paper in filteredPaperNotes"
+            :key="paper.id_paper"
             class="clickable-row"
-            @click="userService.openUser(user)"
+            @click="noteService.openThread(paper)"
           >
             <td>
-              {{ user.first_name }}
+              {{ paper.title }}
             </td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.id_tag }}</td>
+            <td>{{ paper.content }}</td>
+            <td>{{ paper.created_by }}</td>
+            <td>{{ paper.creation_date }}</td>
           </tr>
         </tbody>
       </table>
@@ -66,19 +66,19 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import Navbar from "@/components/Navbar.vue";
-import * as userService from "@/service/user.service";
+import * as noteService from "@/service/note.service";
 import { toastApiError } from "@/service/toast.service";
 import router from "@/router";
 // import WaitSpinner from "@/components/WaitSpinner.vue";
 
 const searchInput = ref("");
-const users = ref([]);
+const paperNotes = ref([]);
 
-const filteredUsers = computed(() => {
+const filteredPaperNotes = computed(() => {
   const input = searchInput.value?.trim().toLowerCase() || "";
 
-  return users.value.filter((users) => {
-    const matchesInput = users.username.toLowerCase().includes(input);
+  return paperNotes.value.filter((paperNotes) => {
+    const matchesInput = paperNotes.title.toLowerCase().includes(input);
 
     return matchesInput;
   });
@@ -94,11 +94,9 @@ onMounted(async () => {
   loading.value = true;
   let error = null;
 
-  Promise.allSettled([
-    userService.getUsers(),
-  ]).then((results) => {
+  Promise.allSettled([noteService.getNotes()]).then((results) => {
     if (results[0].status === "fulfilled") {
-      users.value = results[0].value;
+      paperNotes.value = results[0].value;
     } else {
       error = results[0].reason;
       toastApiError(error);
