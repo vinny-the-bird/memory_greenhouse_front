@@ -52,9 +52,7 @@
                 @click="onLogout()"
               >
                 <span class="icon">
-                  <font-awesome-icon
-                    icon="fa-solid fa-right-from-bracket"
-                  />
+                  <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
                 </span>
                 <span>Déconnexion</span>
               </button>
@@ -75,6 +73,8 @@ const apiInfo = ref(
     import.meta.env.VITE_LOGIN_URL
   }`
 );
+
+// comment for init develop again :) <3
 </script>
 
 <style scoped>
