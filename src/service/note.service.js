@@ -11,11 +11,15 @@ export async function getNotes() {
 
 export async function getThread(id) {
   const response = await axios.get(`${url}/threads/${id}`);
+  console.log("🚀 ~ getThread ~ response.data:", response.data)
+  
   return response.data;
 }
 
 export async function openThread(paper) {
   let id = paper.id_paper;
+  // console.log("🚀 ~ openThread ~ paper:", paper)
+  // console.log("🚀 ~ openThread ~ id:", id)
   router.push(`/threads/${id}`);
 }
 

@@ -32,32 +32,44 @@
         </div>
       </nav>
 
-      <table class="table is-hoverable has-text-left is-fullwidth">
-        <thead>
-          <tr class="">
-            <th>Titre</th>
-            <th>Contenu</th>
-            <th>Auteur</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="paper in filteredPaperNotes"
-            :key="paper.id_paper"
-            class="clickable-row"
-            @click="noteService.openThread(paper)"
-          >
-            <td>
-              {{ paper.title }}
-            </td>
-            <td>{{ paper.content }}</td>
-            <td>{{ paper.created_by }}</td>
-            <td>{{ paper.creation_date }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- START of cards -->
+      <div class="grid is-col-min-16">
+        <div
+          v-for="paper in filteredPaperNotes"
+          :key="paper.id_paper"
+          class="cell clickable-row"
+          @click="noteService.openThread(paper)"
+        >
+          <div class="card">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img
+                      src="https://bulma.io/assets/images/placeholders/96x96.png"
+                      alt="Placeholder image"
+                    />
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="title is-5">{{ paper.title }}</div>
+                  <div class="subtitle is-5">
+                    <time class="is-italic is-size-6">{{ paper.creation_date }}</time>
+                    <p>
+                      {{ paper.created_by }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="content">
+                {{ paper.content }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- END of cards -->
     </div>
   </div>
   <br />
@@ -114,5 +126,13 @@ onMounted(async () => {
 
 .px-2 {
   margin-bottom: 3rem;
+}
+
+.content {
+  padding: 0.5rem;
+}
+
+.card {
+  margin-top: 2rem;
 }
 </style>
