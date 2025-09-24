@@ -3,7 +3,11 @@
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <router-link class="navbar-item" to="/">
-          <img class="image" src="@/assets/sprout.png" alt="Greenhouse Logo" />
+          <img
+            class="image"
+            src="/src/assets/sprout.png"
+            alt="Greenhouse Logo"
+          />
         </router-link>
 
         <a
