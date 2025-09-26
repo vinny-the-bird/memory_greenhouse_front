@@ -11,8 +11,6 @@ export async function getNotes() {
 
 export async function getThread(id) {
   const response = await axios.get(`${url}/threads/${id}`);
-  console.log("🚀 ~ getThread ~ response.data:", response.data);
-
   return response.data;
 }
 

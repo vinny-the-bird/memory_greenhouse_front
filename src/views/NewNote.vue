@@ -84,12 +84,14 @@ function getLocalDateTimeString() {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// TODO: replace hardcoded created_by by the user id
+// TODO: replace hardcoded user id (mvp: dropdown?)
+const currentUser = 84;
+
 const form = ref({
   title: "",
   content: "",
   creation_date: getLocalDateTimeString(),
-  created_by: 19,
+  created_by: currentUser,
 });
 
 
