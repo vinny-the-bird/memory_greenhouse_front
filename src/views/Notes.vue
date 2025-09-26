@@ -25,7 +25,7 @@
 
         <div class="level-right">
           <p class="level-item">
-            <a class="button is-success" @click="createUser">
+            <a class="button is-success" @click="createNote">
               <font-awesome-icon icon="fa-solid fa-plus" size="1x" />
             </a>
           </p>
@@ -96,8 +96,8 @@ const filteredPaperNotes = computed(() => {
   });
 });
 
-function createUser() {
-  router.push("/new-user");
+function createNote() {
+  router.push("/new-note");
 }
 
 const loading = ref(false);

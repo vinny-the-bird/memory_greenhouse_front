@@ -77,7 +77,7 @@ onMounted(async () => {
   } catch (err) {
     toastApiError(err);
   } finally {
-    loading.value = false;
+    // loading.value = false;
   }
 });
 
