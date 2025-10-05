@@ -3,10 +3,14 @@
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <router-link class="navbar-item" to="/">
-          <img class="image" src="@/assets/sprout.png" alt="Greenhouse Logo" />
+          <img
+            class="image"
+            src="/src/assets/sprout.png"
+            alt="Greenhouse Logo"
+          />
         </router-link>
 
-        <a
+        <!-- <a
           role="button"
           class="navbar-burger"
           aria-label="menu"
@@ -17,22 +21,22 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </a>
+        </a> -->
       </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
           <router-link class="navbar-item" to="/">Home</router-link>
           <router-link class="navbar-item" to="/notes">Notes</router-link>
-          <router-link class="navbar-item" to="/users">Users</router-link>
+          <router-link class="navbar-item" to="/users">Utilisateurs</router-link>
           <router-link class="navbar-item" to="/documentation"
             >Documentation</router-link
           >
-          <router-link class="navbar-item" to="/test">TEST LAB</router-link>
+          <!-- <router-link class="navbar-item" to="/test">TEST LAB</router-link> -->
         </div>
 
         <div class="navbar-end">
-          <!-- Affiche les URL de l'API, utile pour le debug -->
+          <!-- Affiche les URL de l'API (utile pour debug) -->
           <!-- <div class="navbar-item">
             <span
               :title="apiInfo"
@@ -52,9 +56,7 @@
                 @click="onLogout()"
               >
                 <span class="icon">
-                  <font-awesome-icon
-                    icon="fa-solid fa-right-from-bracket"
-                  />
+                  <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
                 </span>
                 <span>Déconnexion</span>
               </button>
@@ -75,6 +77,7 @@ const apiInfo = ref(
     import.meta.env.VITE_LOGIN_URL
   }`
 );
+
 </script>
 
 <style scoped>

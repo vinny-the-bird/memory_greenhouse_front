@@ -2,14 +2,15 @@
   <Navbar />
   <div class="container px-2">
     <h2 class="title is-4">
-      Greenhouse Homepage
+      GREENHOUSE
       <font-awesome-icon icon="fa-solid fa-seedling" />
     </h2>
-    <p>As the day goes ..........</p>
+    <h2 class="subtitle is-4 is-italic">"Faire germer les idées"</h2>
+    <h3 class="subtitle is-5">Application de partage de notes</h3>
+    <br />
+    <p>"As the day goes, so goes the coffee" ..........</p>
 
     <div class="container is-flex is-align-items-baseline">
-      <!-- X-factor sizing -->
-
       <div
         class="container is-flex is-flex-direction-column is-align-items-center"
       >
