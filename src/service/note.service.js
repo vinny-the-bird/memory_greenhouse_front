@@ -37,17 +37,43 @@ export async function createNote(form) {
   return response.data;
 }
 
-export async function updateUser(id, form) {
-  const response = await axios.patch(`${url}/users/${id}`, {
-    first_name: form.first_name,
-    last_name: form.last_name,
-    username: form.username,
-    password: form.password,
+
+/**
+ * Create a comment (child paper) for a note or another comment.
+ * Expects `form` to be either a reactive ref or a plain object containing:
+ * { content, creation_date, created_by, parent_id, title? }
+ */
+export async function createComment(form) {
+  const f = form.value ?? form;
+
+  const payload = {
+    // use 'comment' to differentiate; backend should accept any paper_type.
+    paper_type: "comment",
+    title: f.title ?? null,
+    content: f.content,
+    parent_id: f.parent_id ?? null,
+    creation_date: f.creation_date,
+    created_by: f.created_by,
+  };
+
+  const response = await axios.post(`${url}/papers`, payload, {
+    headers: { "Content-Type": "application/json" },
   });
   return response.data;
 }
 
-export async function deleteUser(id) {
-  const response = await axios.delete(`${url}/users/${id}`);
-  return response.data;
-}
+
+// export async function updateUser(id, form) {
+//   const response = await axios.patch(`${url}/users/${id}`, {
+//     first_name: form.first_name,
+//     last_name: form.last_name,
+//     username: form.username,
+//     password: form.password,
+//   });
+//   return response.data;
+// }
+
+// export async function deleteUser(id) {
+//   const response = await axios.delete(`${url}/users/${id}`);
+//   return response.data;
+// }
