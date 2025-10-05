@@ -10,7 +10,7 @@
           />
         </router-link>
 
-        <a
+        <!-- <a
           role="button"
           class="navbar-burger"
           aria-label="menu"
@@ -21,7 +21,7 @@
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </a>
+        </a> -->
       </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
@@ -36,7 +36,7 @@
         </div>
 
         <div class="navbar-end">
-          <!-- Affiche les URL de l'API, utile pour le debug -->
+          <!-- Affiche les URL de l'API (utile pour debug) -->
           <!-- <div class="navbar-item">
             <span
               :title="apiInfo"
@@ -78,7 +78,6 @@ const apiInfo = ref(
   }`
 );
 
-// comment for init develop again :) <3
 </script>
 
 <style scoped>

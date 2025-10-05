@@ -5,7 +5,6 @@
       <div class="box">
         <h1 class="title is-4">Poster une nouvelle note</h1>
         <form @submit.prevent>
-          <!-- User dropdown -->
 
           <div class="field">
             <label class="label">Utilisateur</label>
@@ -27,7 +26,6 @@
             </div>
           </div>
 
-          <!-- Title input -->
           <div class="field">
             <label class="label">Titre</label>
             <div class="control">
@@ -41,7 +39,6 @@
             </div>
           </div>
 
-          <!-- Content textarea -->
           <div class="field">
             <label class="label">Contenu</label>
             <div class="control">
@@ -54,7 +51,6 @@
             </div>
           </div>
 
-          <!-- Buttons -->
           <div class="level">
             <div class="level-left"></div>
             <div class="level-right">
@@ -97,10 +93,6 @@ function getLocalDateTimeString() {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// TODO: replace hardcoded user id (mvp: dropdown?)
-// const currentUser = 84;
-
-// all users list
 const users = ref([]);
 
 onMounted(async () => {

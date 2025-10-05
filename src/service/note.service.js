@@ -47,7 +47,6 @@ export async function createComment(form) {
   const f = form.value ?? form;
 
   const payload = {
-    // use 'comment' to differentiate; backend should accept any paper_type.
     paper_type: "comment",
     title: f.title ?? null,
     content: f.content,
@@ -62,18 +61,3 @@ export async function createComment(form) {
   return response.data;
 }
 
-
-// export async function updateUser(id, form) {
-//   const response = await axios.patch(`${url}/users/${id}`, {
-//     first_name: form.first_name,
-//     last_name: form.last_name,
-//     username: form.username,
-//     password: form.password,
-//   });
-//   return response.data;
-// }
-
-// export async function deleteUser(id) {
-//   const response = await axios.delete(`${url}/users/${id}`);
-//   return response.data;
-// }

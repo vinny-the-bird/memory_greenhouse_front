@@ -38,7 +38,7 @@
             <th>Prénom</th>
             <th>Nom</th>
             <th>Nom d'utilisateur</th>
-            <th>N° tag</th>
+            <!-- <th>N° tag</th> -->
             <th></th>
           </tr>
         </thead>
@@ -54,7 +54,7 @@
             </td>
             <td>{{ user.last_name }}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.id_tag }}</td>
+            <!-- <td>{{ user.id_tag }}</td> -->
           </tr>
         </tbody>
       </table>

@@ -5,7 +5,13 @@
       <WaitSpinner />
     </div> -->
     <div class="notes">
-      <h2 class="title is-4">Notes</h2>
+      <h2 class="title is-4">
+        <s>Notes</s>
+        Graffitis
+      </h2>
+      <h2 class="subtitle is-4">
+        No Edit - No Delete <br>No Remorse - No Regret
+      </h2>
 
       <nav class="level">
         <div class="level-left">
@@ -32,7 +38,6 @@
         </div>
       </nav>
 
-      <!-- START of cards -->
       <div class="grid is-col-min-16">
         <div
           v-for="paper in filteredPaperNotes"
@@ -54,7 +59,9 @@
                 <div class="media-content">
                   <div class="title is-5">{{ paper.title }}</div>
                   <div class="subtitle is-5">
-                    <time class="is-italic is-size-6">{{ paper.creation_date }}</time>
+                    <time class="is-italic is-size-6">{{
+                      paper.creation_date
+                    }}</time>
                     <p>
                       {{ paper.created_by }}
                     </p>
@@ -68,8 +75,6 @@
           </div>
         </div>
       </div>
-
-      <!-- END of cards -->
     </div>
   </div>
   <br />

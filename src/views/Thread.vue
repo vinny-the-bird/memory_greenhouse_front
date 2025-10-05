@@ -4,7 +4,6 @@
     <div class="notes">
       <h2 class="title is-4">{{ thisThread.title }}</h2>
 
-      <!-- main note -->
       <article class="media">
         <figure class="media-left">
           <p class="image is-64x64">
@@ -37,9 +36,7 @@
               </a>
             </div>
           </nav>
-
-          <!-- ===== CHANGE START ===== -->
-          <!-- reply to main note form -->
+         
           <div v-if="showReplyToNote" class="box">
             <form @submit.prevent="submitReplyToNote">
               <div class="field">
@@ -77,10 +74,8 @@
 
               <div class="level">
                 <div class="level-left"></div>
-                <!-- ===== ADD: empty spacer for alignment ===== -->
                 <div class="level-right">
                   <div class="buttons">
-                    <!-- ===== ADD: group buttons nicely ===== -->
                     <button
                       class="button is-primary"
                       type="submit"
@@ -98,10 +93,7 @@
               </div>
             </form>
           </div>
-          <!-- ===== CHANGE END ===== -->
-
-          <!-- ===== CHANGE START ===== -->
-          <!-- comments thread display -->
+  
           <div v-if="thisThread.comments && thisThread.comments.length">
             <CommentItem
               v-for="c in thisThread.comments"
@@ -112,7 +104,6 @@
               @posted="refreshThread"
             />
           </div>
-          <!-- ===== CHANGE END ===== -->
         </div>
       </article>
     </div>
@@ -125,7 +116,7 @@ import { useRoute } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import CommentItem from "@/components/CommentItem.vue";
 import * as noteService from "@/service/note.service";
-import * as userService from "@/service/user.service"; // ===== CHANGE ADDED =====
+import * as userService from "@/service/user.service";
 import { toastApiError } from "@/service/toast.service";
 
 const route = useRoute();
@@ -139,12 +130,8 @@ const thisThread = ref({
   comments: [],
 });
 
-// ===== CHANGE START =====
-const users = ref([]); // all users for dropdowns
-// ===== CHANGE END =====
+const users = ref([]);
 
-// ===== CHANGE START =====
-// reply to note form and state
 const showReplyToNote = ref(false);
 const replyToNoteForm = ref({
   content: "",
@@ -192,7 +179,6 @@ async function submitReplyToNote() {
     toastApiError(err);
   }
 }
-// ===== CHANGE END =====
 
 async function refreshThread() {
   try {
@@ -205,7 +191,6 @@ async function refreshThread() {
 
 onMounted(async () => {
   try {
-    // ===== CHANGE START =====
     // fetch thread and all users
     const [threadRes, usersRes] = await Promise.all([
       noteService.getThread(id),
@@ -213,7 +198,6 @@ onMounted(async () => {
     ]);
     thisThread.value = threadRes;
     users.value = usersRes;
-    // ===== CHANGE END =====
   } catch (err) {
     toastApiError(err);
   }

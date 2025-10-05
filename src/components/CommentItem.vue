@@ -111,7 +111,7 @@ import CommentItem from "./CommentItem.vue"; // recursive import
 import * as noteService from "@/service/note.service";
 import { toastApiError } from "@/service/toast.service";
 
-// ✅ removed local fetching; rely only on parent-provided users
+// removed local fetching; rely only on parent-provided users
 const props = defineProps({
   comment: { type: Object, required: true },
   level: { type: Number, default: 0 },
