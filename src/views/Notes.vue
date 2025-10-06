@@ -5,12 +5,10 @@
       <WaitSpinner />
     </div> -->
     <div class="notes">
-      <h2 class="title is-4">
-        <s>Notes</s>
-        Graffitis
-      </h2>
-      <h2 class="subtitle is-4">
-        No Edit - No Delete <br>No Remorse - No Regret
+      <h2 class="title is-4"><s>Notes</s> => Graffitis</h2>
+      <h2 class="subtitle is-4 is-italic">
+        No Update - No Delete <br />
+        No Remorse - No Regret
       </h2>
 
       <nav class="level">
