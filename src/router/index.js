@@ -4,6 +4,7 @@ import NewNote from "@/views/NewNote.vue";
 import NewUser from "@/views/NewUser.vue";
 import Notes from "@/views/Notes.vue";
 import Test from "@/views/Test.vue";
+import TheLongestDay from "@/views/TheLongestDay.vue";
 import Thread from "@/views/Thread.vue";
 import UpdateUser from "@/views/UpdateUser.vue";
 import Users from "@/views/Users.vue";
@@ -19,6 +20,7 @@ const routes = [
   { path: "/users/:id", name: "Update User", component: UpdateUser },
   { path: "/documentation", name: "Documentation", component: Documentation },
   { path: "/test", name: "Testlab", component: Test },
+  { path: "/the-longest-day", name: "thelongestday", component: TheLongestDay },
 ];
 
 const router = createRouter({

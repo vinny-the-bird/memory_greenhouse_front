@@ -28,9 +28,14 @@
         <div class="navbar-start">
           <router-link class="navbar-item" to="/">Home</router-link>
           <router-link class="navbar-item" to="/notes">Notes</router-link>
-          <router-link class="navbar-item" to="/users">Utilisateurs</router-link>
+          <router-link class="navbar-item" to="/users"
+            >Utilisateurs</router-link
+          >
           <router-link class="navbar-item" to="/documentation"
             >Documentation</router-link
+          >
+          <router-link class="navbar-item" to="/the-longest-day"
+            >🕰️</router-link
           >
           <!-- <router-link class="navbar-item" to="/test">TEST LAB</router-link> -->
         </div>
@@ -77,7 +82,6 @@ const apiInfo = ref(
     import.meta.env.VITE_LOGIN_URL
   }`
 );
-
 </script>
 
 <style scoped>
