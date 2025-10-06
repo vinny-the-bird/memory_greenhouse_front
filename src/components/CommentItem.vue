@@ -25,12 +25,12 @@
             <a class="level-item" @click.prevent="toggleReply">
               <font-awesome-icon icon="fa-solid fa-reply" />&nbsp;
             </a>
-            <a class="level-item">
+            <!-- <a class="level-item">
               <font-awesome-icon icon="fa-solid fa-thumbs-up" />
             </a>
             <a class="level-item">
               <font-awesome-icon icon="fa-solid fa-thumbs-down" />
-            </a>
+            </a> -->
           </div>
         </nav>
 
