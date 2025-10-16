@@ -10,7 +10,7 @@
         <h1 class="title is-5">{{ today }}</h1>
       </div>
       <div class="box">
-        <h1 class="subtitle is-4">Deadline in</h1>
+        <h1 class="subtitle is-4">Deadline CDA in</h1>
         <h1 class="title is-5">{{ remainingTimeCda }}</h1>
       </div>
       <div class="box">
@@ -31,8 +31,8 @@ const remainingTimeCda = ref("");
 const remainingtTimeExam = ref("");
 
 // deadlines
-const deadlineExam = new Date(2026, 4, 26, 18);
-const deadlineCda = new Date(2025, 10, 3, 18);
+const deadlineExam = new Date(2026, 4, 18);
+const deadlineCda = new Date(2026, 0, 29);
 
 function formatRemainingTime(ms) {
   const totalSeconds = Math.floor(ms / 1000);
